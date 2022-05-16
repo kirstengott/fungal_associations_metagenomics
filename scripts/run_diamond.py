@@ -15,5 +15,5 @@ outfile = "{out_dir}/diamond_blastp.tsv".format(out_dir = output_dir)
 if os.path.exists(outfile):
     print('ALREADY INITIATED:', command)
 else:
-    #os.system(command)
-    print(command)
+    os.system(command)
+    #print(command)
