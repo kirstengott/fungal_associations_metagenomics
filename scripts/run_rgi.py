@@ -5,8 +5,7 @@ import sys,os
 
 fasta = sys.argv[1]
 
-output_dir = os.path.dirname(fasta)
-outfile    = "{}/card_out".format(output_dir)
+outfile = os.path.basename(fasta) + ".card"
 
 
 
