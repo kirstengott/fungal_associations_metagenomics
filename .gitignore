@@ -4,3 +4,11 @@ faa
 *__pycache__*
 bin
 db
+*cmscan.gz
+*out
+*cmscan.gz
+*aligned_reads*
+*assembly*
+*filtered_reads*
+*protein*
+*raw_read*
