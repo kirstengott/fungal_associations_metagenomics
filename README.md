@@ -48,6 +48,14 @@ rename 's/11475/AttcolgardBottom_FD/' 11475*
 rename 's/11478/AttcolfgardenTop_FD/' 11478*
 rename 's/11489/CypfungaCombined_FD/' 11489*
 
+## aligning reads
+bwa mem ../../assembly/AptfungaCombined_FD_2029527003.a.fna AptfungaCombined_FD.1.TCAG.2009_10_03_02_06_45.F3GY48O01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/AptfungaCombined_FD.bam
+bwa mem ../../assembly/AttcepgaCombined_FD_2029527004.a.fna  AttcepgaCombined_FD.1.TCAG.2009_10_03_00_06_46.F3GTV4A01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/AttcepgaCombined_FD.bam
+bwa mem ../../assembly/AttcolfgardenTop_FD_2029527005.a.fna  AttcolfgardenTop_FD.1.TCAG.2009_10_16_21_47_09.F36MELC01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/AttcolfgardenTop_FD.bam
+bwa mem ../../assembly/AttcolgardBottom_FD_2029527006.a.fna AttcolgardBottom_FD.1.TCAG.2009_10_14_07_47_07.F31SS7V01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/AttcolgardBottom_FD.bam
+bwa mem ../../assembly/CypfungaCombined_FD_2030936005.a.fna CypfungaCombined_FD.1.TCAG.2009_10_21_06_46_59.F4EQGSL01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/CypfungaCombined_FD.bam
+
+
 
 for i in `ls ~/jgi/*/*COG`; do dir=`dirname $i`; bn=`basename $dir`; base=`basename $i`; cp $i ./${bn}_${base}; done
 
