@@ -50,3 +50,4 @@ rename 's/11489/CypfungaCombined_FD/' 11489*
 
 
 for i in `ls ~/jgi/*/*COG`; do dir=`dirname $i`; bn=`basename $dir`; base=`basename $i`; cp $i ./${bn}_${base}; done
+

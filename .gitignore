@@ -12,3 +12,4 @@ db
 *filtered_reads*
 *protein*
 *raw_read*
+*.json.gz
