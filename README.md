@@ -66,3 +66,6 @@ update_blastdb.pl --decompress nr
 for i in `ls`; do ~/scripts/parseBlast.R $i $i.parsed 30 0.001; done
 for i in `ls`; do ../..//scripts/parseBlast.R $i $i.parsed 30 0.001; done
 for i in `ls`; do ../..//scripts/parseBlast.R $i $i.parsed 30 0.001; done
+for infile in *fastq.gz; do bn=$(basename ${infile} .fastq.gz); sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge ${bn} -o ${bn}.sig ${infile}; done
+sourmash index -k 31 genbank-2022.03-bacteria-k31 genbank-2022.03-bacteria-k31.zip
+for i in `ls data/raw_read/signatures/`; do bn=`echo $i | sed -e "s/\..*$//" | sed -e "s/_.*$//"`; sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.08-plant-k31.sbt.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.08-plant-k31.csv; done
