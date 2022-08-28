@@ -59,3 +59,10 @@ bwa mem ../../assembly/CypfungaCombined_FD_2030936005.a.fna CypfungaCombined_FD.
 
 for i in `ls ~/jgi/*/*COG`; do dir=`dirname $i`; bn=`basename $dir`; base=`basename $i`; cp $i ./${bn}_${base}; done
 
+## Annotate COGS
+for i in `ls`; do python3 ../../scripts/run_diamond.py $i 5 ../../db/COG/cog-20.dmnd ../COG/${i%.faa}.dmnd.out; done
+blastdbcmd -entry all -db nr -out nr.fa
+update_blastdb.pl --decompress nr
+for i in `ls`; do ~/scripts/parseBlast.R $i $i.parsed 30 0.001; done
+for i in `ls`; do ../..//scripts/parseBlast.R $i $i.parsed 30 0.001; done
+for i in `ls`; do ../..//scripts/parseBlast.R $i $i.parsed 30 0.001; done
