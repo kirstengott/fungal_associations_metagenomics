@@ -19,11 +19,10 @@ command = "sourmash gather {sig} {db} --threshold-bp 10000 -o {out}".format(sig 
 
 checkpoint = outfile + "_chkpnt"
 
-
-
 if os.path.exists(checkpoint):
     print('ALREADY DONE:', command)
 else:
+    #os.remove(checkpoint)
     print('Running:', command)
     p = subprocess.Popen(command, shell = True)
     os.waitpid(p.pid, 0)

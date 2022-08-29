@@ -1,5 +1,9 @@
 import os, sys, re
 
+def listToDict(lst):
+    op = { i : 1 for i in lst }
+    return op
+
 ## first parse in the plant accessions
 
 plant_nr_ids = 'db/blast/sequence_plant.seq'
@@ -14,11 +18,18 @@ with open(plant_nr_ids, 'r') as fh:
 ## next parse in the matching taxids
 
 
+
+
+
+plant_nr_d = listToDict(plant_nr)
+
+
 prot2taxid = 'db/blast/prot.accession2taxid.FULL' ## column 1 is the accession, column 2 is the taxid
 
 
 prot2tax = {}
 
+print('First Done')
 
 count = 0
 with open(prot2taxid, 'r') as fh:
@@ -28,20 +39,20 @@ with open(prot2taxid, 'r') as fh:
             continue
         else:
             items = line.strip().split()
-            if items[0] in plant_nr:
+            if items[0] in plant_nr_d.keys():
                 prot2tax[items[0]] = items[1]
             else:
                 continue
 
 
-
+print('Second Done')
         
 ## filter the nr fasta and rename them according to the kaiju spec (counter_taxid)
 
 nr       = 'db/blast/nr.fa'
 
 
-file_out = 'db/blast/nr_plant.fa'
+file_out = 'db/blast/nr_plant_1.fa'
 fo       = open(file_out, 'w')
 
 

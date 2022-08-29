@@ -69,3 +69,10 @@ for i in `ls`; do ../..//scripts/parseBlast.R $i $i.parsed 30 0.001; done
 for infile in *fastq.gz; do bn=$(basename ${infile} .fastq.gz); sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge ${bn} -o ${bn}.sig ${infile}; done
 sourmash index -k 31 genbank-2022.03-bacteria-k31 genbank-2022.03-bacteria-k31.zip
 for i in `ls data/raw_read/signatures/`; do bn=`echo $i | sed -e "s/\..*$//" | sed -e "s/_.*$//"`; sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.08-plant-k31.sbt.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.08-plant-k31.csv; done
+ls data/raw_read/signatures/ | parallel -j 2 python3 scripts/run_sourmash_gather.py data/raw_read/signatures/{} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash
+
+
+## making plant kaiju database 
+awk 'FNR == NR {myarray[$0]; next} $1 in myarray { print }' sequence_plant.seq prot.accession2taxid.FULL >prot.accession2taxid.plant
+kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o nr_plant_1_kaiju nr_plant_1.fa
+kaiju-mkfmi nr_plant_1_kaiju
