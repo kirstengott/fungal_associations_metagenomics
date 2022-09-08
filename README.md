@@ -73,6 +73,7 @@ ls data/raw_read/signatures/ | parallel -j 2 python3 scripts/run_sourmash_gather
 
 
 ## making plant kaiju database 
-awk 'FNR == NR {myarray[$0]; next} $1 in myarray { print }' sequence_plant.seq prot.accession2taxid.FULL >prot.accession2taxid.plant
+
 kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o nr_plant_1_kaiju nr_plant_1.fa
 kaiju-mkfmi nr_plant_1_kaiju
+ls data/raw_read/signatures/ | grep -v AttbisABBM3 | grep -v AttbisABBM2 | parallel -j 3 python3 scripts/run_sourmash_gather.py data/raw_read/signatures/{} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash
