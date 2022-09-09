@@ -2,3 +2,5 @@ cds
 faa
 *~*
 *__pycache__*
+.Rproj.user
+.DS_Store
