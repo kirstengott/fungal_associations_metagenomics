@@ -2,7 +2,9 @@
 
 
 ## make uniprot SBT database --- functions.. 
+
 sourmash sketch protein -p k=21,k=31,k=51,scaled=1000,abund -o uniprot_sprot.sig uniprot_sprot.fasta 
+
 sourmash index -k 31 --protein uniprot_sprot uniprot_sprot.sig
 
 
@@ -10,6 +12,7 @@ sourmash index -k 31 --protein uniprot_sprot uniprot_sprot.sig
 
 ## make DNA sketches from reads
 for i in `ls`; do trim-low-abund.py -C 3 -Z 18 -V -M 2e9 $i; done
+
 for infile in forward/*.abundtrim; do bn=$(basename ${infile} .fastq.gz.abundtrim); bn1=`echo $bn | sed "s/\..*$//"`; sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge ${bn} -o ${bn}.sig ${infile} reverse/${bn1}*abundtrim; done
 
 
@@ -43,16 +46,25 @@ for i in `ls data/raw_read/signatures/`; do bn=`echo $i | sed -e "s/\..*$//" | s
 ## renaming files
 
 rename 's/11463/AttcepgaCombined_FD/' 11463*
+
 rename 's/11465/AptfungaCombined_FD/' 11465*
+
 rename 's/11475/AttcolgardBottom_FD/' 11475*
+
 rename 's/11478/AttcolfgardenTop_FD/' 11478*
+
 rename 's/11489/CypfungaCombined_FD/' 11489*
 
 ## aligning reads
 bwa mem ../../assembly/AptfungaCombined_FD_2029527003.a.fna AptfungaCombined_FD.1.TCAG.2009_10_03_02_06_45.F3GY48O01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/AptfungaCombined_FD.bam
+
 bwa mem ../../assembly/AttcepgaCombined_FD_2029527004.a.fna  AttcepgaCombined_FD.1.TCAG.2009_10_03_00_06_46.F3GTV4A01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/AttcepgaCombined_FD.bam
-bwa mem ../../assembly/AttcolfgardenTop_FD_2029527005.a.fna  AttcolfgardenTop_FD.1.TCAG.2009_10_16_21_47_09.F36MELC01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/AttcolfgardenTop_FD.bam
+
+bwa mem ../../assembly/AttcolfgardenTop_FD_2029527005.a.fna  AttcolfgardenTop_FD.1.TCAG.2009_10_16_21_47_09.F36MELC01.fastq.gz | samtools view 
+-@ 5 -b -o ../../aligned_reads/AttcolfgardenTop_FD.bam
+
 bwa mem ../../assembly/AttcolgardBottom_FD_2029527006.a.fna AttcolgardBottom_FD.1.TCAG.2009_10_14_07_47_07.F31SS7V01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/AttcolgardBottom_FD.bam
+
 bwa mem ../../assembly/CypfungaCombined_FD_2030936005.a.fna CypfungaCombined_FD.1.TCAG.2009_10_21_06_46_59.F4EQGSL01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/CypfungaCombined_FD.bam
 
 
@@ -63,17 +75,26 @@ for i in `ls ~/jgi/*/*COG`; do dir=`dirname $i`; bn=`basename $dir`; base=`basen
 for i in `ls`; do python3 ../../scripts/run_diamond.py $i 5 ../../db/COG/cog-20.dmnd ../COG/${i%.faa}.dmnd.out; done
 blastdbcmd -entry all -db nr -out nr.fa
 update_blastdb.pl --decompress nr
+
 for i in `ls`; do ~/scripts/parseBlast.R $i $i.parsed 30 0.001; done
+
 for i in `ls`; do ../..//scripts/parseBlast.R $i $i.parsed 30 0.001; done
+
 for i in `ls`; do ../..//scripts/parseBlast.R $i $i.parsed 30 0.001; done
+
 for infile in *fastq.gz; do bn=$(basename ${infile} .fastq.gz); sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge ${bn} -o ${bn}.sig ${infile}; done
+
 sourmash index -k 31 genbank-2022.03-bacteria-k31 genbank-2022.03-bacteria-k31.zip
+
 for i in `ls data/raw_read/signatures/`; do bn=`echo $i | sed -e "s/\..*$//" | sed -e "s/_.*$//"`; sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.08-plant-k31.sbt.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.08-plant-k31.csv; done
+
 ls data/raw_read/signatures/ | parallel -j 2 python3 scripts/run_sourmash_gather.py data/raw_read/signatures/{} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash
 
 
 ## making plant kaiju database 
 
 kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o nr_plant_1_kaiju nr_plant_1.fa
+
 kaiju-mkfmi nr_plant_1_kaiju
+
 ls data/raw_read/signatures/ | grep -v AttbisABBM3 | grep -v AttbisABBM2 | parallel -j 3 python3 scripts/run_sourmash_gather.py data/raw_read/signatures/{} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash
