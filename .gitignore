@@ -3,6 +3,8 @@ cds
 faa
 *~*
 *__pycache__*
+.Rproj.user
+.DS_Store
 bin
 db
 *cmscan.gz
