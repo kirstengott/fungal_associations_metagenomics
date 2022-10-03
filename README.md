@@ -1,6 +1,10 @@
 # fungal_associations_metagenomics
 
 
+## running quast on assemblies
+
+for i in `ls */*fna | grep -v unassembled | grep -v contigs | grep -v genes`; do outdir=`dirname $i`;  bn=`basename ${i%.fna}`; quast.py -o ${outdir}_${bn} -t 10 -m 300 $i; done
+
 ## make uniprot SBT database --- functions.. 
 
 sourmash sketch protein -p k=21,k=31,k=51,scaled=1000,abund -o uniprot_sprot.sig uniprot_sprot.fasta 
@@ -40,7 +44,35 @@ for infile in *.fastq.gz; do bn=$(basename ${infile} .fastq.gz); sourmash sketch
 
 ## identifying genbank sequences in the reads
 
-for i in `ls data/raw_read/signatures/`; do bn=`echo $i | sed -e "s/\..*$//" | sed -e "s/_.*$//"`; sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.03-protozoa-k31.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.03-protozoa-k31.csv; sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.03-archaea-k31.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.03-archaea-k31.csv; sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.03-fungi-k31.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.03-fungi-k31.csv ; sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.03-viral-k31.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.03-viral-k31.csv; done
+for i in `ls data/raw_read/signatures/`; 
+	do bn=`echo $i | sed -e "s/\..*$//" | sed -e "s/_.*$//"`; 
+	sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.03-protozoa-k31.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.03-protozoa-k31.csv; 
+	sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.03-archaea-k31.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.03-archaea-k31.csv; 
+	sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.03-fungi-k31.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.03-fungi-k31.csv ; 
+	sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.03-viral-k31.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.03-viral-k31.csv;
+done
+
+ls data/raw_read/signatures/ | grep -v AttbisABBM3 | grep -v AttbisABBM2 | parallel -j 3 python3 scripts/run_sourmash_gather.py data/raw_read/signatures/{} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash
+
+
+## identifying genbank sequences in assemblies 
+
+for i in `ls data/assembly/*sig`; 
+	do
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash/taxa_genomes
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-viral-k31.zip sourmash/taxa_genomes
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-fungi-k31.zip sourmash/taxa_genomes
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-archaea-k31.zip sourmash/taxa_genomes	
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-protozoa-k31.zip sourmash/taxa_genomes
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.08-plant-k31.sbt.zip sourmash/taxa_genomes
+done
+
+
+
+
+
+
+
 
 
 ## renaming files
@@ -97,4 +129,18 @@ kaiju-mkbwt -n 5 -a ACDEFGHIKLMNPQRSTVWY -o nr_plant_1_kaiju nr_plant_1.fa
 
 kaiju-mkfmi nr_plant_1_kaiju
 
-ls data/raw_read/signatures/ | grep -v AttbisABBM3 | grep -v AttbisABBM2 | parallel -j 3 python3 scripts/run_sourmash_gather.py data/raw_read/signatures/{} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash
+
+
+
+
+
+../../../scripts/run_sourmash_compare_rawr_rawr.sh
+../../scripts/run_sourmash_compare_g_g.sh
+for i in `ls *fastq.gz | sed -e s/..*$// | sed -e s/_.*$//`; do bwa mem ../assembly/$i*fna $i*fastq.gz | samtools view -@ 3 -b -o ../aligned_reads/${i}.bam& done
+
+
+
+
+
+## running kaiju on test plant database
+../bin/kaiju/bin/kaiju-multi -t ../db/kaiju/nodes.dmp -f ../db/kaiju/nr_plant_1_kaiju.fmi  -i ../data/raw_read/AttbisABBM1_FD_11254.5.198435.CGATGT.fastq.gz,../data/raw_read/AttbisABBM2_FD_11254.5.198435.TTAGGC.fastq.gz,../data/raw_read/AttbisABBM3_FD_11254.6.198438.TGACCA.fastq.gz,../data/raw_read/AttcapACBM1_FD_11231.4.197613.ATGTCA.fastq.gz,../data/raw_read/AttcapACBM2_FD_11231.4.197613.CCGTCC.fastq.gz,../data/raw_read/AttcapACBM3_FD_11231.5.197616.GTAGAG.fastq.gz,../data/raw_read/AttlaeALBM1_FD_11231.5.197616.GTCCGC.fastq.gz,../data/raw_read/AttlaeALBM2_FD_11231.6.197619.GTGAAA.fastq.gz,../data/raw_read/AttlaeALBM3_FD_11231.6.197619.GTGGCC.fastq.gz,../data/raw_read/AttsexASBM1_FD_11231.7.197622.GTTTCG.fastq.gz,../data/raw_read/AttsexASBM2_FD_11231.7.197622.CGTACG.fastq.gz,../data/raw_read/AttsexASBM3_FD_11231.8.197625.GAGTGG.fastq.gz,../data/raw_read/FG1.fastq.gz,../data/raw_read/FG2.fastq.gz,../data/raw_read/FG3.fastq.gz -o AttbisABBM1.plant.out,AttbisABBM2.plant.out,AttbisABBM3.plant.out,AttcapACBM1.plant.out,AttcapACBM2.plant.out,AttcapACBM3.plant.out,AttlaeALBM1.plant.out,AttlaeALBM2.plant.out,AttlaeALBM3.plant.out,AttsexASBM1.plant.out,AttsexASBM2.plant.out,AttsexASBM3.plant.out,FG1.plant.out,FG2.plant.out,FG3.plant.out
