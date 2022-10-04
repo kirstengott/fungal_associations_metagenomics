@@ -29,6 +29,7 @@ total_bp = int(total_n[-1])/1000000
 
 infernal_cmd = "cmscan -Z {bp} --cpu 1 --cut_ga --rfam --nohmmonly --tblout {out_dir}/{pre}_infernal-genome.tblout --fmt 2 --clanin ~/db/Rfam.clanin ~/db/Rfam.cm {fasta_in}  > {out_dir}/{pre}_infernal-genome.cmscan".format(bp = total_bp, pre = prefix, fasta_in = fasta, out_dir = output_dir)
 
+os.system(infernal_cmd)
 
 
 
