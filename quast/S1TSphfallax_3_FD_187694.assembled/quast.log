@@ -1,0 +1,61 @@
+/home/gotting/miniconda3/lib/python3.7/site-packages/quast-5.0.2-py3.7.egg/EGG-INFO/scripts/quast.py -o quast/S1TSphfallax_3_FD_187694.assembled -t 10 -m 300 S1TSphfallax_3_FD/187694.assembled.fna
+
+Version: 5.0.2
+
+System information:
+  OS: Linux-4.15.0-191-generic-x86_64-with-debian-buster-sid (linux_64)
+  Python version: 3.7.4
+  CPUs number: 96
+
+Started: 2022-10-04 15:23:18
+
+Logging to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/quast.log
+
+CWD: /home/gotting/jgi
+Main parameters: 
+  MODE: default, threads: 10, minimum contig length: 300, minimum alignment length: 65, \
+  ambiguity: one, threshold for extensive misassembly size: 1000
+
+Contigs:
+  Pre-processing...
+  S1TSphfallax_3_FD/187694.assembled.fna ==> 187694.assembled
+
+2022-10-04 15:24:32
+Running Basic statistics processor...
+  Contig files: 
+    187694.assembled
+  Calculating N50 and L50...
+    187694.assembled, N50 = 1769, L50 = 113678, Total length = 1293682687, GC % = 46.64, # N's per 100 kbp =  0.00
+  Drawing Nx plot...
+    saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/basic_stats/Nx_plot.pdf
+  Drawing cumulative plot...
+    saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/basic_stats/cumulative_plot.pdf
+  Drawing GC content plot...
+    saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/basic_stats/GC_content_plot.pdf
+  Drawing 187694.assembled GC content plot...
+    saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/basic_stats/187694.assembled_GC_content_plot.pdf
+Done.
+
+NOTICE: Genes are not predicted by default. Use --gene-finding or --glimmer option to enable it.
+
+2022-10-04 15:25:44
+Creating large visual summaries...
+This may take a while: press Ctrl-C to skip this step..
+  1 of 2: Creating Icarus viewers...
+  2 of 2: Creating PDF with all tables and plots...
+Done
+
+2022-10-04 15:26:05
+RESULTS:
+  Text versions of total report are saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/report.txt, report.tsv, and report.tex
+  Text versions of transposed total report are saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/transposed_report.txt, transposed_report.tsv, and transposed_report.tex
+  HTML version (interactive tables and plots) is saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/report.html
+  PDF version (tables and plots) is saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/report.pdf
+  Icarus (contig browser) is saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/icarus.html
+  Log is saved to /home/gotting/jgi/quast/S1TSphfallax_3_FD_187694.assembled/quast.log
+
+Finished: 2022-10-04 15:26:05
+Elapsed time: 0:02:47.379470
+NOTICEs: 1; WARNINGs: 0; non-fatal ERRORs: 0
+
+Thank you for using QUAST!

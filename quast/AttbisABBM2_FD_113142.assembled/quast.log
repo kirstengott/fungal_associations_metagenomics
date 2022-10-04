@@ -1,0 +1,61 @@
+/home/gotting/miniconda3/lib/python3.7/site-packages/quast-5.0.2-py3.7.egg/EGG-INFO/scripts/quast.py -o quast/AttbisABBM2_FD_113142.assembled -t 10 -m 300 AttbisABBM2_FD/113142.assembled.fna
+
+Version: 5.0.2
+
+System information:
+  OS: Linux-4.15.0-191-generic-x86_64-with-debian-buster-sid (linux_64)
+  Python version: 3.7.4
+  CPUs number: 96
+
+Started: 2022-10-04 15:07:47
+
+Logging to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/quast.log
+
+CWD: /home/gotting/jgi
+Main parameters: 
+  MODE: default, threads: 10, minimum contig length: 300, minimum alignment length: 65, \
+  ambiguity: one, threshold for extensive misassembly size: 1000
+
+Contigs:
+  Pre-processing...
+  AttbisABBM2_FD/113142.assembled.fna ==> 113142.assembled
+
+2022-10-04 15:08:25
+Running Basic statistics processor...
+  Contig files: 
+    113142.assembled
+  Calculating N50 and L50...
+    113142.assembled, N50 = 1120, L50 = 115829, Total length = 564811484, GC % = 41.84, # N's per 100 kbp =  0.00
+  Drawing Nx plot...
+    saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/basic_stats/Nx_plot.pdf
+  Drawing cumulative plot...
+    saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/basic_stats/cumulative_plot.pdf
+  Drawing GC content plot...
+    saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/basic_stats/GC_content_plot.pdf
+  Drawing 113142.assembled GC content plot...
+    saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/basic_stats/113142.assembled_GC_content_plot.pdf
+Done.
+
+NOTICE: Genes are not predicted by default. Use --gene-finding or --glimmer option to enable it.
+
+2022-10-04 15:08:57
+Creating large visual summaries...
+This may take a while: press Ctrl-C to skip this step..
+  1 of 2: Creating Icarus viewers...
+  2 of 2: Creating PDF with all tables and plots...
+Done
+
+2022-10-04 15:09:08
+RESULTS:
+  Text versions of total report are saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/report.txt, report.tsv, and report.tex
+  Text versions of transposed total report are saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/transposed_report.txt, transposed_report.tsv, and transposed_report.tex
+  HTML version (interactive tables and plots) is saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/report.html
+  PDF version (tables and plots) is saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/report.pdf
+  Icarus (contig browser) is saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/icarus.html
+  Log is saved to /home/gotting/jgi/quast/AttbisABBM2_FD_113142.assembled/quast.log
+
+Finished: 2022-10-04 15:09:08
+Elapsed time: 0:01:20.586122
+NOTICEs: 1; WARNINGs: 0; non-fatal ERRORs: 0
+
+Thank you for using QUAST!
