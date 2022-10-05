@@ -69,7 +69,21 @@ done
 ls data/assembly/*sig | parallel -j 3 python3 scripts/run_sourmash_gather.py {} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash/taxa_genomes
 
 
+## identifying genbank sequences in reads 
 
+for i in `ls data/assembly/*sig`; 
+	do
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-viral-k31.zip sourmash/taxa_reads & 
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-fungi-k31.zip sourmash/taxa_reads &
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-archaea-k31.zip sourmash/taxa_reads &	
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-protozoa-k31.zip sourmash/taxa_reads &
+	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.08-plant-k31.sbt.zip sourmash/taxa_reads
+done
+
+ls data/assembly/*sig | parallel -j 3 python3 scripts/run_sourmash_gather.py {} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash/taxa_reads
+
+
+for i in `ls ~/jgi/*/*reads.sig`
 
 
 
@@ -146,3 +160,8 @@ for i in `ls *fastq.gz | sed -e s/..*$// | sed -e s/_.*$//`; do bwa mem ../assem
 rename s/_FD// *FD*
 for i in `cat outgroup.txt`; do  sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge $i -o $i/${i}.sig $i/${i}*fna; done
 for i in `cat outgroup.txt`; do  sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge $i -o $i/${i}.fna.sig $i/${i}*fna; done
+for i in `ls *sig | sed -e "s/_.*$//" | sed -e "s/.sig.*$//"`; do sourmash signature rename ${i}*sig ${i} -o renamed/${i}.sig; done
+for i in `ls ~/jgi/*/*fna.sig`; do bn=`basename $i`; base=`echo $bn | sed -e "s/_FD.*$//"`; sourmash signature rename $i ${base}_assembly -o ${base}.sig; done
+for i in `ls *sig | sed -e "s/_.*$//" | sed -e "s/.sig.*$//" | sed -e "s/.trinity.*$//"`; do sourmash signature rename ${i}*sig ${i}_assembly -o renamed/${i}.sig; done
+for i in `ls ~/jgi/*/*reads.sig`; do bn=`basename $i`; base=`echo $bn | sed -e "s/_FD.*$//"`; sourmash signature rename $i ${base}_read -o ${base}.sig; done
+sourmash compare -k 31 --csv reads_and_assemblies_all.csv input/*
