@@ -16,20 +16,25 @@
 library(tidyverse)
 library(pheatmap)
 
-load('id_map.Rdata')
+#load('id_map.Rdata')
 
-id_map_l <- id_map$id
+#id_map_l <- id_map$id
 
-names(id_map_l) <- id_map$query_filename
+#names(id_map_l) <- id_map$query_filename
 
-df <- read_csv('sourmash/output/all_sig_compare.csv') 
+df <- read_csv('sourmash/compare/reads_and_assemblies_all.csv') 
 
-colnames(df) <- id_map_l[colnames(df)]
 
 df$row <- colnames(df)
 
 df_dist <- df %>% column_to_rownames('row')
 
 
-pheatmap(df_dist, filename = 'output/distance_heatmap.pdf')
-pheatmap(df_dist, filename = 'output/distance_heatmap.png')
+pheatmap(df_dist, 
+         cellwidth = 8,
+         cellheight = 8,
+         filename = 'output/distance_heatmap.pdf')
+pheatmap(df_dist, 
+         cellwidth = 8,
+         cellheight = 8,
+         filename = 'output/distance_heatmap.png')

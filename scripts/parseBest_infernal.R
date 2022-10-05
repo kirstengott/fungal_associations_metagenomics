@@ -1,0 +1,47 @@
+#!/usr/bin/env Rscript
+
+args <- commandArgs(TRUE)
+if (length(args) == 0L || any(c('-h', '--help') %in% args)) {
+    message('usage: path/to/parseBlast.R input output pid
+    input             Blast output.
+    output            Name of outfile
+    pid		      percent identity to filter
+    eval              eval filter
+    -h, --help        to print help messages')
+    q('no')
+}
+
+library(tidyverse)
+
+args <- 'data/infernal/AptfungaCombined_FD_infernal-genome.tblout.gz'
+
+blast           <- read_delim(args[1], comment = '#', delim = ' ', trim_ws = TRUE,
+                              col_names = FALSE) %>% 
+    select(X2, X3, X4, X6, X10, X11) 
+
+
+colnames(blast) <- c("query", "subject", "perc_id", "align_len", "mismatches", "gaps", "q_start", "q_end", "s_start", "s_end", "e_val", "bit_score")
+
+options(dplyr.width = Inf)
+
+blast.final <- blast %>%
+    mutate(e_val = as.numeric(e_val)) %>%
+    group_by(query) %>% 
+        filter(rank(-bit_score, ties.method="first") == 1) %>%
+            ungroup()
+
+if (exists(args[3])) {
+   blast.final <- filter(blast.final, perc_id >= pid)
+}
+
+if (exists(args[4])) {
+   blast.final <- filter(blast.final, e_val >= eval)
+}
+
+if (nrow(blast.final) == 0) {
+    message("No good hits")
+} else {
+## write out the results
+write.table(blast.final[ ,c("query", "subject", "e_val", "perc_id", "align_len")], file = args[2], sep="\t", quote=FALSE, row.names=FALSE, col.names=FALSE)
+}
+
