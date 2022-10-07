@@ -79,7 +79,10 @@ with open(tmp_file, 'r') as fh:
                 else:
                     out_flag = 1 ## features on opposite strands
         if out_flag == 1:
-            print(out.format(rf, scaf, start, end, strand, evalue)) ## print the first and reset to next
+            if start > end:
+                print(out.format(rf, scaf, end, start, strand, evalue)) ## print the first and reset to next
+            else:
+                print(out.format(rf, scaf, start, end, strand, evalue)) ## print the first and reset to next
             rf     = rf_n
             scaf   = scaf_n
             start  = start_n
