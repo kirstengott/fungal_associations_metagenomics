@@ -20,6 +20,9 @@ os.system(sort_cmnd)
 
 tmp_file = '{}_sorted.csv'.format(infile)
 
+out_lines = set()
+
+
 with open(tmp_file, 'r') as fh:
     for line in fh:
         if '#' in line:
@@ -80,18 +83,22 @@ with open(tmp_file, 'r') as fh:
                     out_flag = 1 ## features on opposite strands
         if out_flag == 1:
             if start > end:
-                print(out.format(rf, scaf, end, start, strand, evalue)) ## print the first and reset to next
+                out_lines.add(out.format(rf, scaf, end, start, strand, evalue)) ## print the first and reset to next
             else:
-                print(out.format(rf, scaf, start, end, strand, evalue)) ## print the first and reset to next
+                out_lines.add(out.format(rf, scaf, start, end, strand, evalue)) ## print the first and reset to next
             rf     = rf_n
             scaf   = scaf_n
             start  = start_n
             end    = end_n
             strand = strand_n
             evalue = evalue_n
-            
-print(out.format(rf, scaf, start, end, strand, evalue)) ## print the first and reset to next
 
-                
 
-                
+if out_flag == 1:
+    if start > end:
+        out_lines.add(out.format(rf, scaf, end, start, strand, evalue)) ## print the first and reset to next
+    else:
+        out_lines.add(out.format(rf, scaf, start, end, strand, evalue)) ## print the first and reset to next
+
+for i in out_lines:
+    print(i)

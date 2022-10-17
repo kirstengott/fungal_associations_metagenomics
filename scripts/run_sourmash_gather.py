@@ -19,7 +19,7 @@ command = "sourmash gather {sig} {db} --threshold-bp 10000 -o {out}".format(sig 
 
 checkpoint = outfile + "_chkpnt"
 
-if os.path.exists(checkpoint):
+if os.path.exists(checkpoint) and os.path.exists(outfile):
     print('ALREADY DONE:', command)
 else:
     #os.remove(checkpoint)
