@@ -3,27 +3,34 @@
 
 ## running quast on assemblies
 
+```
 for i in `ls */*fna | grep -v unassembled | grep -v contigs | grep -v genes`; do outdir=`dirname $i`;  bn=`basename ${i%.fna}`; quast.py -o ${outdir}_${bn} -t 10 -m 300 $i; done
+```
 
 ## make uniprot SBT database --- functions.. 
 
+```
 sourmash sketch protein -p k=21,k=31,k=51,scaled=1000,abund -o uniprot_sprot.sig uniprot_sprot.fasta 
 
 sourmash index -k 31 --protein uniprot_sprot uniprot_sprot.sig
 
-
+```
 
 
 ## make DNA sketches from reads
+
+```
 for i in `ls`; do trim-low-abund.py -C 3 -Z 18 -V -M 2e9 $i; done
 
 for infile in forward/*.abundtrim; do bn=$(basename ${infile} .fastq.gz.abundtrim); bn1=`echo $bn | sed "s/\..*$//"`; sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge ${bn} -o ${bn}.sig ${infile} reverse/${bn1}*abundtrim; done
 
 
 for infile in *fastq.gz; do bn=$(basename ${infile} .fastq.gz); sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund --merge ${bn} -o ${bn}.sig ${infile}; done
-
+```
 
 ## make DNA sketches for assemblies
+
+```
 sourmash sketch dna -p scaled=1000,k=21,k=31,k=51 *.fna --name-from-first
 for infile in forward/*.abundtrim; do bn=$(basename ${infile} .fastq.gz.abundtrim); bn1=`echo $bn | sed "s/\..*$//"`; sourmash sketch translate -p k=21,k=31,k=51,scaled=1000,abund --merge ${bn} -o ${bn}.protein_sig ${infile} reverse/${bn1}*abundtrim; done
 
@@ -31,7 +38,11 @@ sourmash sketch dna -p scaled=1000,k=21,k=31,k=51 /researchdrive_files/FG_metatr
 
 for i in `ls /researchdrive_files/FG_metatranscriptomes/*fastq.gz.abundtrim`; do bn=`basename $i`; sourmash sketch translate -p k=21,k=31,k=51,scaled=1000,abund -o $bn.protein_sig $i; done
 
+```
+
 ## getting proteins from Trinity assembly
+
+```
 TransDecoder.LongOrfs -t FG2.trinity_out.Trinity.fna; TransDecoder.LongOrfs -t FG3.trinity_out.Trinity.fna
 ls | parallel -j 5 python3 ../../scripts/run_rgi.py {}
 
@@ -41,9 +52,11 @@ TransDecoder.Predict -t FG2.trinity_out.Trinity.fna --retain_blastp_hits FG2.tri
 ls assembly/*Trinity.fna | parallel python3 ../scripts/run_infernal.py {}
 
 for infile in *.fastq.gz; do bn=$(basename ${infile} .fastq.gz); sourmash sketch dna -p k=21,k=31,k=51,scaled=1000,abund -o signatures/${bn}.sig ${infile}; done
+```
 
 ## identifying genbank sequences in the reads
 
+```
 for i in `ls data/raw_read/signatures/`; 
 	do bn=`echo $i | sed -e "s/\..*$//" | sed -e "s/_.*$//"`; 
 	sourmash gather data/raw_read/signatures/$i db/sourmash/genbank-2022.03-protozoa-k31.zip --threshold-bp 10000 -o sourmash/${bn}_genbank-2022.03-protozoa-k31.csv; 
@@ -53,10 +66,11 @@ for i in `ls data/raw_read/signatures/`;
 done
 
 ls data/raw_read/signatures/ | grep -v AttbisABBM3 | grep -v AttbisABBM2 | parallel -j 3 python3 scripts/run_sourmash_gather.py data/raw_read/signatures/{} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash
-
+```
 
 ## identifying genbank sequences in assemblies 
 
+```
 for i in `ls data/assembly/*sig`; 
 	do
 	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-viral-k31.zip sourmash/taxa_genomes & 
@@ -69,27 +83,50 @@ done
 ls data/assembly/*sig | parallel -j 3 python3 scripts/run_sourmash_gather.py {} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash/taxa_genomes
 
 
-## identifying genbank sequences in reads 
 
-for i in `ls data/assembly/*sig`; 
-	do
-	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-viral-k31.zip sourmash/taxa_reads & 
-	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-fungi-k31.zip sourmash/taxa_reads &
-	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-archaea-k31.zip sourmash/taxa_reads &	
-	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.03-protozoa-k31.zip sourmash/taxa_reads &
-	python3 scripts/run_sourmash_gather.py $i db/sourmash/genbank-2022.08-plant-k31.sbt.zip sourmash/taxa_reads
+```
+
+## identifying marker genes  in the reads
+
+```
+for i in `ls data/raw_read/signatures/`; 
+	do bn=`echo $i | sed -e "s/\..*$//" | sed -e "s/_.*$//"`; 
+	sourmash gather data/raw_read/signatures/$i /data1/ncbi_targeted_loci/bacteria.16SrRNA.sig --threshold-bp 10000 -o sourmash/marker_reads/${bn}_bacteria.16SrRNA.csv; 
+	sourmash gather data/raw_read/signatures/$i /data1/ncbi_targeted_loci/bacteria.23SrRNA.sig --threshold-bp 10000 -o sourmash/marker_reads/${bn}_bacteria.23SrRNA.csv; 
+	sourmash gather data/raw_read/signatures/$i /data1/ncbi_targeted_loci/bacteria.5SrRNA.sig --threshold-bp 10000 -o sourmash/marker_reads/${bn}_bacteria.5SrRNA.csv ; 
+	sourmash gather data/raw_read/signatures/$i /data1/ncbi_targeted_loci/fungi.18SrRNA.sig --threshold-bp 10000 -o sourmash/marker_reads/${bn}_fungi.18SrRNA.csv;
+	sourmash gather data/raw_read/signatures/$i /data1/ncbi_targeted_loci/fungi.28SrRNA.sig --threshold-bp 10000 -o sourmash/marker_reads/${bn}_fungi.28SrRNA.csv;
+	sourmash gather data/raw_read/signatures/$i /data1/ncbi_targeted_loci/fungi.ITS.sig --threshold-bp 10000 -o sourmash/marker_reads/${bn}_fungi.ITS.csv;
 done
 
-ls data/assembly/*sig | parallel -j 3 python3 scripts/run_sourmash_gather.py {} db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip sourmash/taxa_reads
 
 
-for i in `ls ~/jgi/*/*reads.sig`
+```
+
+## identifying marker genes in assemblies 
+
+```
+for i in `ls data/assembly/signatures/`; 
+	do
+	bn=`echo $i | sed -e "s/\..*$//" | sed -e "s/_.*$//"`;
+	sourmash gather data/assembly/signatures/$i /data1/ncbi_targeted_loci/bacteria.16SrRNA.sig --threshold-bp 10000 -o sourmash/marker_genomes/${bn}_bacteria.16SrRNA.csv; 
+	sourmash gather data/assembly/signatures/$i /data1/ncbi_targeted_loci/bacteria.23SrRNA.sig --threshold-bp 10000 -o sourmash/marker_genomes/${bn}_bacteria.23SrRNA.csv; 
+	sourmash gather data/assembly/signatures/$i /data1/ncbi_targeted_loci/bacteria.5SrRNA.sig --threshold-bp 10000 -o sourmash/marker_genomes/${bn}_bacteria.5SrRNA.csv ; 
+	sourmash gather data/assembly/signatures/$i /data1/ncbi_targeted_loci/fungi.18SrRNA.sig --threshold-bp 10000 -o sourmash/marker_genomes/${bn}_fungi.18SrRNA.csv;
+	sourmash gather data/assembly/signatures/$i /data1/ncbi_targeted_loci/fungi.28SrRNA.sig --threshold-bp 10000 -o sourmash/marker_genomes/${bn}_fungi.28SrRNA.csv;
+	sourmash gather data/assembly/signatures/$i /data1/ncbi_targeted_loci/fungi.ITS.sig --threshold-bp 10000 -o sourmash/marker_genomes/${bn}_fungi.ITS.csv;
+
+done
+
+```
+
 
 
 
 
 ## renaming files
 
+```
 rename 's/11463/AttcepgaCombined_FD/' 11463*
 
 rename 's/11465/AptfungaCombined_FD/' 11465*
@@ -99,6 +136,7 @@ rename 's/11475/AttcolgardBottom_FD/' 11475*
 rename 's/11478/AttcolfgardenTop_FD/' 11478*
 
 rename 's/11489/CypfungaCombined_FD/' 11489*
+```
 
 ## aligning reads
 bwa mem ../../assembly/AptfungaCombined_FD_2029527003.a.fna AptfungaCombined_FD.1.TCAG.2009_10_03_02_06_45.F3GY48O01.fastq.gz | samtools view -@ 5 -b -o ../../aligned_reads/AptfungaCombined_FD.bam
@@ -165,3 +203,12 @@ for i in `ls ~/jgi/*/*fna.sig`; do bn=`basename $i`; base=`echo $bn | sed -e "s/
 for i in `ls *sig | sed -e "s/_.*$//" | sed -e "s/.sig.*$//" | sed -e "s/.trinity.*$//"`; do sourmash signature rename ${i}*sig ${i}_assembly -o renamed/${i}.sig; done
 for i in `ls ~/jgi/*/*reads.sig`; do bn=`basename $i`; base=`echo $bn | sed -e "s/_FD.*$//"`; sourmash signature rename $i ${base}_read -o ${base}.sig; done
 sourmash compare -k 31 --csv reads_and_assemblies_all.csv input/*
+for i in `ls *parsed.best`; do echo $i; cat $i | awk -F "," { print \t \t \t   : - \t \t } | bedtools getfasta -s -name -fi ../assembly/${i%_infernal-genome.tblout.parsed.best}*.fna  -bed - >>${i%.parsed.best}.fa; done
+
+
+for i in `ls */Raw_Data/* | grep -v sff`; do bn=`echo $i | sed -e "s/\/.*$//"`;  ~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/fungi.ITS.fna -1 $i -d -o marker_align_out/${bn}_fungi_ITS.bam -t 10; ~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/fungi.28SrRNA.fna -1 $i -d -o marker_align_out/${bn}_fungi_28SrRNA.bam -t 10; ~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/bacteria.16SrRNA.fna -1 $i -d -o marker_align_out/${bn}_bacteria_16SrRNA.bam -t 10; done
+
+for i in `ls *bam | grep -v sorted`; do  samtools sort -@ 20 -o ${i%.bam}.sorted.bam $i; samtools index ${i%.bam}.sorted.bam; samtools idxstats ${i%.bam}.sorted.bam | awk -F "\t" '{ if ($3 > 0) { print } }' >>${i%.bam}.hits.txt; done
+for i in `ls infernal/*.clean.fa`; do  bn=`basename $i`; blastn -query $i -db /data1/ncbi_targeted_loci/all_markers.fna -outfmt 6 -evalue 0.001 >infernal_blast/${bn%_infernal-genome.clean.fa}.txt; done
+for i in `ls */Raw_Data/* | grep -v sff`; do bn=`echo $i | sed -e "s/\/.*$//"`;  ~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/fungi.18SrRNA.fna -1 $i -d -o marker_align_out/${bn}_fungi_18SrRNA.bam -t 10; done
+for i in `ls`; do ~/scripts/parseBlast.R $i ${i}.parsed 30 0.001; done
