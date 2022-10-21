@@ -202,13 +202,24 @@ for i in `ls *sig | sed -e "s/_.*$//" | sed -e "s/.sig.*$//"`; do sourmash signa
 for i in `ls ~/jgi/*/*fna.sig`; do bn=`basename $i`; base=`echo $bn | sed -e "s/_FD.*$//"`; sourmash signature rename $i ${base}_assembly -o ${base}.sig; done
 for i in `ls *sig | sed -e "s/_.*$//" | sed -e "s/.sig.*$//" | sed -e "s/.trinity.*$//"`; do sourmash signature rename ${i}*sig ${i}_assembly -o renamed/${i}.sig; done
 for i in `ls ~/jgi/*/*reads.sig`; do bn=`basename $i`; base=`echo $bn | sed -e "s/_FD.*$//"`; sourmash signature rename $i ${base}_read -o ${base}.sig; done
+
 sourmash compare -k 31 --csv reads_and_assemblies_all.csv input/*
 for i in `ls *parsed.best`; do echo $i; cat $i | awk -F "," { print \t \t \t   : - \t \t } | bedtools getfasta -s -name -fi ../assembly/${i%_infernal-genome.tblout.parsed.best}*.fna  -bed - >>${i%.parsed.best}.fa; done
 
 
-for i in `ls */Raw_Data/* | grep -v sff`; do bn=`echo $i | sed -e "s/\/.*$//"`;  ~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/fungi.ITS.fna -1 $i -d -o marker_align_out/${bn}_fungi_ITS.bam -t 10; ~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/fungi.28SrRNA.fna -1 $i -d -o marker_align_out/${bn}_fungi_28SrRNA.bam -t 10; ~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/bacteria.16SrRNA.fna -1 $i -d -o marker_align_out/${bn}_bacteria_16SrRNA.bam -t 10; done
+```
+for i in `ls */Raw_Data/* | grep -v sff`; do bn=`echo $i | sed -e "s/\/.*$//"`;  
+~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/fungi.ITS.fna -1 $i -d -o marker_align_out/${bn}_fungi_ITS.bam -t 10;
+~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/fungi.28SrRNA.fna -1 $i -d -o marker_align_out/${bn}_fungi_28SrRNA.bam -t 10; 
+~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/bacteria.16SrRNA.fna -1 $i -d -o marker_align_out/${bn}_bacteria_16SrRNA.bam -t 10; done
 
 for i in `ls *bam | grep -v sorted`; do  samtools sort -@ 20 -o ${i%.bam}.sorted.bam $i; samtools index ${i%.bam}.sorted.bam; samtools idxstats ${i%.bam}.sorted.bam | awk -F "\t" '{ if ($3 > 0) { print } }' >>${i%.bam}.hits.txt; done
+
 for i in `ls infernal/*.clean.fa`; do  bn=`basename $i`; blastn -query $i -db /data1/ncbi_targeted_loci/all_markers.fna -outfmt 6 -evalue 0.001 >infernal_blast/${bn%_infernal-genome.clean.fa}.txt; done
+
 for i in `ls */Raw_Data/* | grep -v sff`; do bn=`echo $i | sed -e "s/\/.*$//"`;  ~/scripts/align_tools/bwa_align.sh -r ../../ncbi_targeted_loci/fungi.18SrRNA.fna -1 $i -d -o marker_align_out/${bn}_fungi_18SrRNA.bam -t 10; done
 for i in `ls`; do ~/scripts/parseBlast.R $i ${i}.parsed 30 0.001; done
+sourmash compare -k 31 --ani --csv reads_and_assemblies_all_ani.csv input/*
+
+```
+for i in `ls`; do samtools sort -@ 20 -o ${i%.bam}.sorted.bam $i; samtools index ${i%.bam}.sorted.bam; samtools view -b -f 4 ${i%.bam}.sorted.bam > ${i%.bam}.unmapped.bam; done
