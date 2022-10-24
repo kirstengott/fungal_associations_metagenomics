@@ -223,3 +223,4 @@ sourmash compare -k 31 --ani --csv reads_and_assemblies_all_ani.csv input/*
 
 ```
 for i in `ls`; do samtools sort -@ 20 -o ${i%.bam}.sorted.bam $i; samtools index ${i%.bam}.sorted.bam; samtools view -b -f 4 ${i%.bam}.sorted.bam > ${i%.bam}.unmapped.bam; done
+for i in `ls *unmapped.bam`; do bedtools bamtofastq -i $i -fq /dev/stdout |  paste - - - -  | cut -f 1,2 | sed 's/^/>/'  | tr "\t" "\n" > ${i%.bam}.fasta; done
