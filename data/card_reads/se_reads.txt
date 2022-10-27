@@ -1,0 +1,12 @@
+/researchdrive_files/users/gotting/jgi/AttbisABBM1_FD/Raw_Data/11254.5.198435.CGATGT.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttbisABBM2_FD/Raw_Data/11254.5.198435.TTAGGC.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttbisABBM3_FD/Raw_Data/11254.6.198438.TGACCA.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttcapACBM1_FD/Raw_Data/11231.4.197613.ATGTCA.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttcapACBM2_FD/Raw_Data/11231.4.197613.CCGTCC.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttcapACBM3_FD/Raw_Data/11231.5.197616.GTAGAG.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttlaeALBM1_FD/Raw_Data/11231.5.197616.GTCCGC.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttlaeALBM2_FD/Raw_Data/11231.6.197619.GTGAAA.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttlaeALBM3_FD/Raw_Data/11231.6.197619.GTGGCC.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttsexASBM1_FD/Raw_Data/11231.7.197622.GTTTCG.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttsexASBM2_FD/Raw_Data/11231.7.197622.CGTACG.fastq.gz
+/researchdrive_files/users/gotting/jgi/AttsexASBM3_FD/Raw_Data/11231.8.197625.GAGTGG.fastq.gz

@@ -1,0 +1,8 @@
+/researchdrive_files/users/gotting/jgi/AptfungaCombined_FD/Raw_Data/
+/researchdrive_files/users/gotting/jgi/AttcepgaCombined_FD/Raw_Data/
+/researchdrive_files/users/gotting/jgi/AttcolfgardenTop_FD/Raw_Data/
+/researchdrive_files/users/gotting/jgi/AttcolfgardenTop_FD/Raw_Data/
+/researchdrive_files/users/gotting/jgi/AttcolgardBottom_FD/Raw_Data/
+/researchdrive_files/users/gotting/jgi/AttcolgardBottom_FD/Raw_Data/
+/researchdrive_files/users/gotting/jgi/CypfungaCombined_FD/Raw_Data/
+/researchdrive_files/users/gotting/jgi/CypfungaCombined_FD/Raw_Data/

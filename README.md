@@ -224,3 +224,5 @@ sourmash compare -k 31 --ani --csv reads_and_assemblies_all_ani.csv input/*
 ```
 for i in `ls`; do samtools sort -@ 20 -o ${i%.bam}.sorted.bam $i; samtools index ${i%.bam}.sorted.bam; samtools view -b -f 4 ${i%.bam}.sorted.bam > ${i%.bam}.unmapped.bam; done
 for i in `ls *unmapped.bam`; do bedtools bamtofastq -i $i -fq /dev/stdout |  paste - - - -  | cut -f 1,2 | sed 's/^/>/'  | tr "\t" "\n" > ${i%.bam}.fasta; done
+~/scripts/align_tools/bwa_align.sh -r /researchdrive_files/db/card/nucleotide_fasta_protein_homolog_model.fasta -1 GraSoiAngelo_129_FD/GraSoiAngelo_129_FD_9013.1.117809.GGTAGC.fastq.gz -t 10 -o GraSoiAngelo_129_FD_card_bwa -s
+python3 scripts/run_sourmash_gather.py data/assembly/signatures/S1TSphfallax_3.sig sourmash/taxa_genomes/; python3 scripts/run_sourmash_gather.py data/assembly/signatures/MicForSoiBWH17_O.sig sourmash/taxa_genomes/
