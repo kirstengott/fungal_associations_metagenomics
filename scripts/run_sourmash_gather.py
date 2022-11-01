@@ -4,7 +4,6 @@ import os, sys, re, subprocess
 
 
 sig_file = sys.argv[1]
-#db       = sys.argv[2]
 out_dir  = sys.argv[2]
 
 base = os.path.basename(sig_file)
@@ -16,12 +15,8 @@ db = ["/home/gotting/projects/fungal_associations_metagenomics/db/sourmash/genba
       "/home/gotting/projects/fungal_associations_metagenomics/db/sourmash/genbank-2022.03-fungi-k31.zip",
       "/home/gotting/projects/fungal_associations_metagenomics/db/sourmash/genbank-2022.03-protozoa-k31.zip",
       "/home/gotting/projects/fungal_associations_metagenomics/db/sourmash/genbank-2022.03-viral-k31.zip",
-      "/home/gotting/projects/fungal_associations_metagenomics/db/sourmash/genbank-2022.08-plant-k31.sbt.zip"]
-
-
-db = [" ".join(db),
+      "/home/gotting/projects/fungal_associations_metagenomics/db/sourmash/genbank-2022.08-plant-k31.sbt.zip",
       "/home/gotting/projects/fungal_associations_metagenomics/db/sourmash/genbank-2022.03-bacteria-k31.sbt.zip"]
-
 
 
 for i in db:
