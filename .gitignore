@@ -1,4 +1,13 @@
 figures
+data/infernal_blast/*txt
+*allele_mapping_data.json
+*allele_mapping_data.txt
+*artifacts_mapping_stats.txt
+*.chkpnt
+*overall_mapping_stats.txt
+*reference_mapping_stats.txt
+*.sorted.length_100.bam
+*.sorted.length_100.bam.bai
 *rdata*
 data/infernal
 *kaiju*
@@ -21,3 +30,5 @@ db
 *protein*
 *raw_read*
 *.json.gz
+*error.txt
+*screen_output.txt
